@@ -1,16 +1,21 @@
-const User = require('../models/lineUser'); // ตรวจว่าไฟล์นี้ชื่อจริงเป็น lineUser.js (ตัว l เล็ก) หรือไม่
+const User = require('../models/lineUser');
 const { replyText } = require('../services/lineService');
 
 exports.handleWebhook = async (req, res) => {
   try {
+    console.log("✅ Webhook Triggered:", JSON.stringify(req.body, null, 2));
+
     const event = req.body.events?.[0];
     if (!event || !event.message || !event.replyToken) {
-      console.log("❌ Invalid event:", JSON.stringify(req.body, null, 2));
-      return res.sendStatus(200); // ส่งกลับ 200 เพื่อไม่ให้ LINE หยุดยิง
+      console.log("❌ Invalid event");
+      return res.sendStatus(200);
     }
 
     const userId = event.source.userId;
     const message = event.message.text;
+
+    console.log("📥 userId:", userId);
+    console.log("📥 message:", message);
 
     const result = await User.findOneAndUpdate(
       { userId },
@@ -18,13 +23,13 @@ exports.handleWebhook = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    console.log("✅ Saved user:", result);
+    console.log("✅ User saved:", result);
 
     await replyText(event.replyToken, `คุณพิมพ์ว่า: ${message}`);
 
     return res.sendStatus(200);
-  } catch (e) {
-    console.error('❌ Webhook Error:', e);
-    return res.sendStatus(200); // ตอบกลับ LINE เสมอแม้พัง เพื่อไม่ให้ Webhook หยุดทำงาน
+  } catch (err) {
+    console.error("❌ Webhook Error:", err);
+    return res.sendStatus(200);
   }
-}
+};
