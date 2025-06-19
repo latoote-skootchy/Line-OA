@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
 const { pushFlex } = require('../services/lineService');
-const Flex = require('../models/Flex.js');
+const Flex = require('../models/flex.js');
 
 router.get('/users', async (req, res) => {
   const users = await User.find();

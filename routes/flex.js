@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Flex = require('../models/Flex.js');
+const Flex = require('../models/flex.js');
 
 // สร้างใหม่
 router.post('/', async (req, res) => {
