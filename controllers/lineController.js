@@ -6,13 +6,19 @@ exports.handleWebhook = async (req, res) => {
     console.log("✅ Webhook Triggered:", JSON.stringify(req.body, null, 2));
 
     const event = req.body.events?.[0];
-    if (!event || !event.message || !event.replyToken) {
-      console.log("❌ Invalid event");
+    if (!event) {
+      console.log("❌ No event found");
       return res.sendStatus(200);
     }
 
-    const userId = event.source.userId;
-    const message = event.message.text;
+    const userId = event?.source?.userId;
+    const message = event?.message?.text;
+    const replyToken = event?.replyToken;
+
+    if (!userId || !message || !replyToken) {
+      console.log("❌ Missing data:", { userId, message, replyToken });
+      return res.sendStatus(200);
+    }
 
     console.log("📥 userId:", userId);
     console.log("📥 message:", message);
@@ -25,11 +31,11 @@ exports.handleWebhook = async (req, res) => {
 
     console.log("✅ User saved:", result);
 
-    await replyText(event.replyToken, `คุณพิมพ์ว่า: ${message}`);
+    await replyText(replyToken, `คุณพิมพ์ว่า: ${message}`);
 
     return res.sendStatus(200);
   } catch (err) {
-    console.error("❌ Webhook Error:", err);
+    console.error("❌ Webhook Error:", err?.message || err);
     return res.sendStatus(200);
   }
 };
