@@ -1,4 +1,4 @@
-const User = require('../models/userID');
+const User = require('../models/lineUser');
 const { replyText } = require('../services/lineService');
 
 exports.handleWebhook = async (req, res) => {

@@ -8,4 +8,4 @@ const flexSchema = new mongoose.Schema({
   description: String
 });
 
-module.exports = mongoose.model('Flex', flexSchema);
+module.exports = mongoose.model('flex-message', flexSchema);
