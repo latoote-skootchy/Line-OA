@@ -12,10 +12,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // DB Connect
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+  dbName: 'linebot'  // ตั้งชื่อ db ให้ชัดเจน
+})
   .then(() => console.log('✅ MongoDB Connected'))
   .catch(err => console.log('❌ MongoDB Error:', err));
-
+  
+console.log("MONGO_URI =", process.env.MONGO_URI);
 // Routes
 const webhookRoutes = require('./routes/webhook');
 const flexRoutes = require('./routes/flex');
